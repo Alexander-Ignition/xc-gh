@@ -7,7 +7,10 @@ Xcode logs formatter GitHub Action
 
 ## Installation
 
-TODO: brew
+```bash
+brew tap Alexander-Ignition/xc-gh https://github.com/Alexander-Ignition/xc-gh.git
+brew install xc-gh
+```
 
 ## Usage
 
