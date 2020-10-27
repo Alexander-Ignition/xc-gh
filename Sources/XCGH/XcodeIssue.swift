@@ -11,23 +11,27 @@ public struct XcodeIssue: Hashable {
         self.message = message
     }
 
+    private static let separator = ":"
+    private static let charactersToBeSkipped = CharacterSet(
+        charactersIn: separator
+    ).union(.whitespacesAndNewlines)
+
     /// Parse line to issue.
     ///
     ///     {path}:{line}:{column?}: {type}: {message}
     public static func parse(_ line: String) -> XcodeIssue? {
         let scanner = Scanner(string: line)
+        scanner.charactersToBeSkipped = charactersToBeSkipped
 
-        guard let file = scanner.scanUpToString(":"), scanner.scanCharacter() == ":" else {
+        guard let file = scanner.scanUpToString(separator) else {
             return nil
         }
-        guard let line = scanner.scanInt(), scanner.scanCharacter() == ":" else {
+        guard let line = scanner.scanInt() else {
             return nil
         }
         let column = scanner.scanInt() // missing in test logs
-        if column != nil, scanner.scanCharacter() != ":" {
-            return nil
-        }
-        guard let type = scanner.scanUpToString(":"), scanner.scanCharacter() == ":" else {
+
+        guard let type = scanner.scanUpToString(separator) else {
             return nil
         }
         guard let message = scanner.scanUpToString("\n") else {
