@@ -1,0 +1,29 @@
+name: Release
+on:
+  release:
+    types:
+      - published
+jobs:
+  release:
+    name: Publish release
+    runs-on: macOS-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Build
+        run: |
+          swift build -c release --arch arm64 --arch x86_64
+          cp ./.build/apple/Products/Release/xc-gh ./xc-gh
+        shell: bash
+      - name: Archive
+        run: zip -r xc-gh.zip README.md LICENSE xc-gh
+      - name: Upload GitHub Release Assets
+        run: gh release upload ${{ github.event.release.tag_name }} xc-gh.zip
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Install Cocoapods
+        run: bundle install
+      - name: Deploy to Cocoapods
+        run: bundle exec pod trunk me
+        env:
+          COCOAPODS_TRUNK_TOKEN: ${{ secrets.COCOAPODS_TRUNK_TOKEN }}
