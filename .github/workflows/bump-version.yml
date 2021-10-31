@@ -2,21 +2,27 @@ name: Bump version
 on:
   workflow_dispatch:
     inputs:
-      formulae:
-        description: 'formulae name'
+      formula:
+        description: 'formula name'
         required: true
       version:
-        description: 'formulae version'
+        description: 'formula version'
         required: true
 jobs:
-  bump-formulae-version:
-    name: Bump Homebrew formulae verion
+  bump-formula-version:
+    name: Bump Homebrew formula verion
     runs-on: macOS-latest
     steps:
       - name: Checkout
         uses: actions/checkout@v2
       - name: Bump
         run: |
-          echo "formula: ${{ github.event.inputs.formulae }}"
-          echo "verion ${{ github.event.inputs.version }}"
+          brew tap RedMadRobot/formulae
+          brew install "$FORMULA_NAME"
+          cp "$FORMULA_NAME".rb $(brew formula "$FORMULA_NAME")
+          brew bump-formula-pr --no-browse --no-audit --write-only --no-fork --version "$FORMULA_VERSION" "$FORMULA_NAME"
+          brew cat "$FORMULA_NAME"
         shell: bash
+        env:
+          FORMULA_NAME: ${{ github.event.inputs.formula }}
+          FORMULA_VERSION: ${{ github.event.inputs.version }}
