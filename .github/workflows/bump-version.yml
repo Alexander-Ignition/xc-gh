@@ -16,14 +16,13 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
       - name: Bump
-        run: |
-          brew update
-          brew tap RedMadRobot/formulae
-          brew install "$FORMULA_NAME"
-          cp "$FORMULA_NAME".rb $(brew formula "$FORMULA_NAME")
-          brew bump-formula-pr --no-browse --no-audit --write-only --no-fork --version "$FORMULA_VERSION" "$FORMULA_NAME"
-          brew cat "$FORMULA_NAME"
         shell: bash
         env:
           FORMULA_NAME: ${{ github.event.inputs.formula }}
           FORMULA_VERSION: ${{ github.event.inputs.version }}
+        run: |
+          brew tap RedMadRobot/formulae
+          brew install "$FORMULA_NAME"
+          cp "$FORMULA_NAME".rb $(brew formula "$FORMULA_NAME")
+          brew bump-formula-pr --no-browse --no-audit --write --no-fork --version "$FORMULA_VERSION" "$FORMULA_NAME"
+          brew cat "$FORMULA_NAME"
