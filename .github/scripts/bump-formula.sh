@@ -25,7 +25,7 @@ brew bump-formula-pr \
 # Show the modified formula
 brew cat "$FORMULA_NAME"
 # Copy the modified formula from the tap to the current repo
-cp "$FORMULA_PATH" .
+cp "$FORMULA_PATH" ./
 
 git add "$FORMULA_NAME".rb
 git commit -m "Bump version $FORMULA_NAME $FORMULA_VERSION"

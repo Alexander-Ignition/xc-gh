@@ -16,7 +16,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
       - name: Bump formula
-        run: ./bump-formula.sh
+        run: ./.github/scripts/bump-formula.sh
         env:
           FORMULA_NAME: ${{ github.event.inputs.formula }}
           FORMULA_VERSION: ${{ github.event.inputs.version }}
